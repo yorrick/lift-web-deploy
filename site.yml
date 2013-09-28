@@ -1,0 +1,4 @@
+- hosts: app-servers
+  user: yorrick 
+  roles:
+     - role: app

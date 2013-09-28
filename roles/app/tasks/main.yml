@@ -1,0 +1,14 @@
+- name: update apt
+  shell: apt-get update
+  sudo: yes
+
+- name: add nginx repository
+  copy: src=files/apt-sources.list dest=/etc/apt/sources.list
+              owner=root group=root mode=0644
+  sudo: yes
+
+- name: install nginx
+  apt: name=nginx state=installed
+  sudo: yes
+
+    
