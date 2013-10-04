@@ -6,9 +6,58 @@
   copy: src=apt-sources.list dest=/etc/apt/sources.list
               owner=root group=root mode=0644
   sudo: yes
+  tags:
+    - config
 
 - name: install nginx
   apt: name=nginx state=installed
   sudo: yes
+  tags:
+    - config
 
-    
+- name: install nginx site file
+  copy: src=nginx-helloworld dest=/etc/nginx/sites-available/helloworld
+  sudo: yes
+  tags:
+    - config
+
+- name: link nginx site file
+  file: path=/etc/nginx/sites-enabled/helloworld src=/etc/nginx/sites-available/helloworld state=link
+  sudo: yes
+  tags:
+    - config
+
+- name: install jetty
+  apt: name=jetty8 state=installed
+  sudo: yes
+  tags:
+    - config
+
+- name: install jetty8 default file
+  copy: src=jetty8 dest=/etc/default/jetty8
+              owner=root group=root mode=0644
+  sudo: yes
+  tags:
+    - config
+
+- name: install maven
+  apt: name=maven2 state=installed
+  sudo: yes
+  tags:
+    - config
+
+- name: install helloworld app war file
+  copy: src=helloworld-1.0-SNAPSHOT.war dest=/usr/share/jetty8/webapps/
+  sudo: yes
+  tags:
+    - config
+
+- name: install helloworld app context file
+  copy: src=helloworld.xml dest=/usr/share/jetty/contexts/helloworld.xml
+  sudo: yes
+
+
+- name: reboot vm
+  shell: reboot
+  sudo: yes    
+
