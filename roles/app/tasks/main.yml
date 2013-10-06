@@ -1,6 +1,9 @@
+
 - name: update apt
   shell: apt-get update
   sudo: yes
+  tags:
+    - config
 
 - name: add nginx repository
   copy: src=apt-sources.list dest=/etc/apt/sources.list
@@ -10,19 +13,13 @@
     - config
 
 - name: install nginx
-  apt: name=nginx state=installed
+  apt: name=nginx state=installed force=yes
   sudo: yes
   tags:
     - config
 
-- name: install nginx site file
-  copy: src=nginx-helloworld dest=/etc/nginx/sites-available/helloworld
-  sudo: yes
-  tags:
-    - config
-
-- name: link nginx site file
-  file: path=/etc/nginx/sites-enabled/helloworld src=/etc/nginx/sites-available/helloworld state=link
+- name: remove default nginx site
+  shell: rm /etc/nginx/sites-enabled/default
   sudo: yes
   tags:
     - config
@@ -40,24 +37,50 @@
   tags:
     - config
 
-- name: install maven
-  apt: name=maven2 state=installed
-  sudo: yes
-  tags:
-    - config
-
-- name: install helloworld app war file
-  copy: src=helloworld-1.0-SNAPSHOT.war dest=/usr/share/jetty8/webapps/
-  sudo: yes
-  tags:
-    - config
-
-- name: install helloworld app context file
-  copy: src=helloworld.xml dest=/usr/share/jetty/contexts/helloworld.xml
-  sudo: yes
-
-
 - name: reboot vm
   shell: reboot
-  sudo: yes    
+  sudo: yes
+  tags:
+    - config
+
+- name: install nginx site file
+  copy: src=nginx-helloworld dest=/etc/nginx/sites-available/helloworld
+  sudo: yes
+  tags:
+    - deploy
+
+- name: link nginx site file
+  file: path=/etc/nginx/sites-enabled/helloworld src=/etc/nginx/sites-available/helloworld state=link
+  sudo: yes
+  tags:
+    - deploy    
+
+- name: install helloworld app war file
+  copy: src=helloworld-1.0-SNAPSHOT.war dest=/usr/share/jetty8/webapps/helloworld.war
+  sudo: yes
+  tags:
+    - deploy
+
+- name: install helloworld app context file
+  copy: src=helloworld.xml dest=/usr/share/jetty8/contexts/
+  sudo: yes
+  tags:
+    - deploy
+
+- name: reload jetty
+  service: name=jetty8 state=restarted
+  sudo: yes
+  tags:
+    - deploy
+
+- name: reload nginx
+  service: name=nginx state=reloaded
+  sudo: yes
+  tags:
+    - deploy
+
+- name: test root url from local
+  shell: 'wget -O - --header="Host: localhost.helloworld.com" localhost'
+  tags:
+    - test-deploy
 
