@@ -1,0 +1,44 @@
+
+- name: update apt
+  shell: apt-get update
+  sudo: yes
+  tags:
+    - config
+
+- name: add nginx repository
+  copy: src=apt-sources.list dest=/etc/apt/sources.list
+              owner=root group=root mode=0644
+  sudo: yes
+  tags:
+    - config
+
+- name: install nginx
+  apt: name=nginx state=installed force=yes
+  sudo: yes
+  tags:
+    - config
+
+- name: remove default nginx site
+  shell: rm /etc/nginx/sites-enabled/default; exit 0 
+  sudo: yes
+  tags:
+    - config
+
+- name: install jetty
+  apt: name=jetty8 state=installed
+  sudo: yes
+  tags:
+    - config
+
+- name: install jetty8 default file
+  copy: src=jetty8 dest=/etc/default/jetty8
+              owner=root group=root mode=0644
+  sudo: yes
+  tags:
+    - config
+
+- name: reboot vm
+  shell: reboot
+  sudo: yes
+  tags:
+    - config
