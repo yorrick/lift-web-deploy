@@ -3,4 +3,5 @@
 *.jar
 *.war
 helloworld/target/*
+helloworld_toto/target/*
 
