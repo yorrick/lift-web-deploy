@@ -24,3 +24,8 @@ sudo visudo
 
 Apply playbook:
 ansible-playbook -v -i hosts site.yml --tags config
+
+
+
+Test site config from dev machine:
+wget -O - --header="Host: localhost.helloworld.com" VM_IP
