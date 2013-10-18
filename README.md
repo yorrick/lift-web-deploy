@@ -22,10 +22,23 @@ sudo visudo
 
 
 
-Apply playbook:
+Apply playbook for config:
 ansible-playbook -v -i hosts site.yml --tags config
+
+
+
+Build war for an application:
+cd helloworld && mvn clean && mvn package && mv target/helloworld-1.0-SNAPSHOT.war ../roles/app/files/; cd -
+
+
+
+Deploy all applications:
+ansible-playbook -v -i hosts site.yml --tags deploy
 
 
 
 Test site config from dev machine:
 wget -O - --header="Host: localhost.helloworld.com" VM_IP
+
+
+

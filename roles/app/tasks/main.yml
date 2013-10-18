@@ -1,7 +1,7 @@
 
  - include: config.yml
  - include: deploy.yml site_name=helloworld
- - include: deploy.yml site_name=helloworld_toto
+ # - include: deploy.yml site_name=helloworld_toto
  - include: reload.yml 
  - include: test.yml site_name=helloworld
- - include: test.yml site_name=helloworld_toto
+ # - include: test.yml site_name=helloworld_toto

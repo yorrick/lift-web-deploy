@@ -1,4 +1,6 @@
 *.swp
-helloworld
-helloworld_toto
+*.class
+*.jar
+*.war
+helloworld/target/*
 
