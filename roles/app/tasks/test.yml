@@ -1,0 +1,4 @@
+- name: test url {{site_name}}
+  shell: 'wget -O - --header="Host: localhost.{{site_name}}.com" localhost'
+  tags:
+    - deploy   

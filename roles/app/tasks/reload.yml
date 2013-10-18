@@ -1,0 +1,12 @@
+
+- name: reload jetty
+  service: name=jetty8 state=restarted
+  sudo: yes
+  tags:
+    - deploy
+
+- name: reload nginx
+  service: name=nginx state=reloaded
+  sudo: yes
+  tags:
+    - deploy
