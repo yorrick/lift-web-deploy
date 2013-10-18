@@ -42,3 +42,5 @@ wget -O - --header="Host: localhost.helloworld.com" VM_IP
 
 
 
+TODO:
+Add a static file to helloworld project, and make nginx serve it
