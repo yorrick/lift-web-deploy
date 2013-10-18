@@ -1,0 +1,7 @@
+Launch jetty in dev mode with maven:
+mvn jetty:run
+
+Make scala snippets build continuously:
+mvn scala:cc
+
+
