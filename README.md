@@ -3,6 +3,10 @@ lift-web-deploy
 Simple Ansible playbook to deploy liftweb applications on Ubuntu server 13.
 
 
+Restart networking when changing connection on host:
+sudo service networking restart
+
+
 Activate virtualenv:
 source ~/virtualenvs/fabric/bin/activate
 
@@ -28,7 +32,7 @@ ansible-playbook -v -i hosts site.yml --tags config
 
 
 Build war for an application:
-cd helloworld && mvn clean && mvn package && mv target/helloworld-1.0-SNAPSHOT.war ../roles/app/files/; cd -
+cd helloworld && mvn clean && mvn package && mv target/helloworld-1.0-SNAPSHOT ../roles/app/files/; cd -
 
 
 

@@ -12,8 +12,19 @@
   tags:
     - config
 
+- name: create webapps directory
+  shell: mkdir ~/webapps; exit 0 
+  tags:
+    - config
+
 - name: install nginx
   apt: name=nginx state=installed force=yes
+  sudo: yes
+  tags:
+    - config
+
+- name: install htop
+  apt: name=htop state=installed
   sudo: yes
   tags:
     - config

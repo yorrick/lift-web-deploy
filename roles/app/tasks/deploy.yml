@@ -1,12 +1,15 @@
-
-- name: install {{site_name}} app war file
-  copy: src={{site_name}}-1.0-SNAPSHOT.war dest=/usr/share/jetty8/webapps/{{site_name}}.war
-  sudo: yes
+- name: build {{site_name}} app
+  local_action: command cd {{site_name}} && rm -rf target && mvn clean && mvn package
   tags:
     - deploy
 
-- name: install {{site_name}} app context file
-  template: src=war-context.xml dest=/usr/share/jetty8/contexts/
+- name: copy {{site_name}} app
+  local_action: command rsync --delete -a helloworld/target/{{site_name}}-1.0-SNAPSHOT 192.168.2.175:~/webapps/
+  tags:
+    - deploy
+
+- name: install {{site_name}} app
+  shell: rm -rf /usr/share/jetty8/webapps/{{site_name}} && cp -r /home/yorrick/webapps/{{site_name}}-1.0-SNAPSHOT /usr/share/jetty8/webapps/{{site_name}}
   sudo: yes
   tags:
     - deploy

@@ -4,4 +4,5 @@
 *.war
 helloworld/target/*
 helloworld_toto/target/*
+roles/app/files/helloworld-1.0-SNAPSHOT/
 

@@ -1,4 +1,14 @@
-- name: test url {{site_name}}
+- name: test jetty url {{site_name}} 
+  shell: 'wget -O - localhost:10000/{{site_name}}'
+  tags:
+    - deploy
+
+- name: test nginx url {{site_name}} 
   shell: 'wget -O - --header="Host: localhost.{{site_name}}.com" localhost'
   tags:
     - deploy   
+
+# - name: test url {{site_name}} from host
+#   local_action: command 'wget -O - --header="Host: localhost.{{site_name}}.com" 192.168.1.115'
+#   tags:
+#     - deploy   

@@ -4,12 +4,16 @@
 
         access_log  /var/log/nginx/{{site_name}}.access.log;
 
+        location ~* ^(.+\.(?:jpe?g|gif|css|png|js|ico))$ {
+            root /usr/share/jetty8/webapps/{{site_name}};
+        }
+
         location / {
             proxy_pass http://127.0.0.1:10000/{{site_name}}/;
-         proxy_set_header  X-Real-IP  $remote_addr;
-         proxy_read_timeout 700;
-         proxy_set_header Host $http_host;
-         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header  X-Real-IP  $remote_addr;
+            proxy_read_timeout 700;
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
 }
 
