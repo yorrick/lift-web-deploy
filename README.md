@@ -47,6 +47,9 @@ wget -O - --header="Host: localhost.helloworld.com" VM_IP
 
 
 TODO:
-Add a static file to helloworld project, and make nginx serve it
-http://serverfault.com/questions/399892/how-to-configure-glassfish-nginx-to-serve-static-files-with-nginx
+0) build apps only once
+1) define app list in a var (group_vars/all)
+1) rewrite static file paths
+2) set up a DB connection using JNDI
+
 

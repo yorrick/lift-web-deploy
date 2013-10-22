@@ -2,13 +2,23 @@
   shell: 'wget -O - localhost:10000/{{site_name}}'
   tags:
     - deploy
+    - test
 
 - name: test nginx url {{site_name}} 
-  shell: 'wget -O - --header="Host: localhost.{{site_name}}.com" localhost'
+  shell: 'wget -O - --header="Host:{{site_name}}.localhost.com" localhost'
   tags:
     - deploy   
+    - test
 
-# - name: test url {{site_name}} from host
-#   local_action: command 'wget -O - --header="Host: localhost.{{site_name}}.com" 192.168.1.115'
-#   tags:
-#     - deploy   
+- name: test url {{site_name}} from host
+  local_action: shell wget -O - --header="Host:{{site_name}}.localhost.com" {{inventory_hostname}}
+  tags:
+    - deploy   
+    - test
+
+- name: test url {{site_name}} from host for static ressources
+  local_action: shell wget -O /dev/null --header="Host:{{site_name}}.localhost.com" {{inventory_hostname}}/kitten.jpeg
+  tags:
+    - deploy   
+    - test
+

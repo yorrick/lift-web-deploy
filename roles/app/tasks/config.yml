@@ -29,8 +29,9 @@
   tags:
     - config
 
-- name: remove default nginx site
-  shell: rm /etc/nginx/sites-enabled/default; exit 0 
+- name: set default nginx site
+  copy: src=default-nginx-site dest=/etc/nginx/sites-available/default
+              owner=root group=root mode=0644
   sudo: yes
   tags:
     - config

@@ -1,6 +1,4 @@
 [app-servers]
-192.168.2.175
-#192.168.1.121
-#192.168.1.115
-#172.16.42.3
+# change your /etc/hosts file for this to work
+ubuntu-server-vm
 

@@ -1,10 +1,11 @@
+# TODO this is not perfect since it will be executed for each remote node, instead of once
 - name: build {{site_name}} app
-  local_action: command cd {{site_name}} && rm -rf target && mvn clean && mvn package
+  local_action: shell cd {{site_name}} && rm -rf target && mvn clean && mvn package
   tags:
-    - deploy
+    - build
 
 - name: copy {{site_name}} app
-  local_action: command rsync --delete -a helloworld/target/{{site_name}}-1.0-SNAPSHOT 192.168.2.175:~/webapps/
+  local_action: command rsync --delete -a helloworld/target/{{site_name}}-1.0-SNAPSHOT {{inventory_hostname}}:~/webapps/ 
   tags:
     - deploy
 
