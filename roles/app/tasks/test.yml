@@ -1,23 +1,27 @@
-- name: test jetty url {{site_name}} 
-  shell: 'wget -O - localhost:10000/{{site_name}}'
+- name: test jetty url
+  shell: 'wget -O - localhost:10000/{{item}}'
+  with_items: site_names
   tags:
     - deploy
     - test
 
-- name: test nginx url {{site_name}} 
-  shell: 'wget -O - --header="Host:{{site_name}}.localhost.com" localhost'
+- name: test nginx url
+  shell: 'wget -O - --header="Host:{{item}}.localhost.com" localhost'
+  with_items: site_names
   tags:
     - deploy   
     - test
 
-- name: test url {{site_name}} from host
-  local_action: shell wget -O - --header="Host:{{site_name}}.localhost.com" {{inventory_hostname}}
+- name: test url from host
+  local_action: shell wget -O - --header="Host:{{item}}.localhost.com" {{inventory_hostname}}
+  with_items: site_names
   tags:
     - deploy   
     - test
 
-- name: test url {{site_name}} from host for static ressources
-  local_action: shell wget -O /dev/null --header="Host:{{site_name}}.localhost.com" {{inventory_hostname}}/kitten.jpeg
+- name: test url from host for static ressources
+  local_action: shell wget -O /dev/null --header="Host:{{item}}.localhost.com" {{inventory_hostname}}/kitten.jpeg
+  with_items: site_names
   tags:
     - deploy   
     - test

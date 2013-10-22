@@ -41,7 +41,6 @@ ansible-playbook -v -i hosts site.yml --tags deploy,test
 
 
 TODO:
-1) define app list in a var (group_vars/all)
 1) rewrite static file paths
 2) set up a DB connection using JNDI
 

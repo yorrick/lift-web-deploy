@@ -1,23 +1,27 @@
 
-- name: copy {{site_name}} app
-  local_action: command rsync --delete -a helloworld/target/{{site_name}}-1.0-SNAPSHOT {{inventory_hostname}}:~/webapps/ 
+- name: copy app
+  local_action: command rsync --delete -a helloworld/target/{{item}}-1.0-SNAPSHOT {{inventory_hostname}}:~/webapps/ 
+  with_items: site_names
   tags:
     - deploy
 
-- name: install {{site_name}} app
-  shell: rm -rf /usr/share/jetty8/webapps/{{site_name}} && cp -r /home/yorrick/webapps/{{site_name}}-1.0-SNAPSHOT /usr/share/jetty8/webapps/{{site_name}}
+- name: install app
+  shell: rm -rf /usr/share/jetty8/webapps/{{item}} && cp -r /home/yorrick/webapps/{{item}}-1.0-SNAPSHOT /usr/share/jetty8/webapps/{{item}}
+  with_items: site_names
   sudo: yes
   tags:
     - deploy
 
 - name: install nginx site file
-  template: src=nginx-config dest=/etc/nginx/sites-available/{{site_name}}
+  template: src=nginx-config dest=/etc/nginx/sites-available/{{item}}
+  with_items: site_names
   sudo: yes
   tags:
     - deploy
 
 - name: link nginx site file
-  file: path=/etc/nginx/sites-enabled/{{site_name}} src=/etc/nginx/sites-available/{{site_name}} state=link
+  file: path=/etc/nginx/sites-enabled/{{item}} src=/etc/nginx/sites-available/{{item}} state=link
+  with_items: site_names
   sudo: yes
   tags:
     - deploy    
