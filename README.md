@@ -41,7 +41,6 @@ ansible-playbook -v -i hosts site.yml --tags deploy,test
 
 
 TODO:
-1) rewrite static file paths
 2) set up a DB connection using JNDI
 
 
