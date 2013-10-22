@@ -5,6 +5,7 @@ import _root_.net.liftweb.http._
 import _root_.net.liftweb.sitemap._
 import _root_.net.liftweb.sitemap.Loc._
 import Helpers._
+import _root_.net.liftweb.mapper.{DB, DefaultConnectionIdentifier}
 
 /**
   * A class that's instantiated early and run.  It allows the application
@@ -18,6 +19,12 @@ class Boot {
     // Build SiteMap
     val entries = Menu(Loc("Home", List("index"), "Home")) :: Nil
     LiftRules.setSiteMap(SiteMap(entries:_*))
+
+
+    val vendor = new StandardDBVendor(Props.get("db.driver") openOr "org.postgresql.Driver",
+               Props.get("db.url") openOr "jdbc:postgresql:dealermaster",
+               Props.get("db.user"), Props.get("db.password"))
+
+    DB.defineConnectionManager(DefaultConnectionIdentifier, vendor)
   }
 }
-
