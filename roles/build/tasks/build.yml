@@ -1,5 +1,0 @@
-
-- name: build {{site_name}} app
-  shell: cd {{site_name}} && rm -rf target && mvn clean && mvn package
-  tags:
-    - build

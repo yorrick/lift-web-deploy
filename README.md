@@ -32,22 +32,15 @@ ansible-playbook -v -i hosts site.yml --tags config
 
 
 Build war for an application:
-cd helloworld && mvn clean && mvn package && mv target/helloworld-1.0-SNAPSHOT ../roles/app/files/; cd -
+cd helloworld && mvn clean && mvn package; cd -
 
 
 
 Deploy all applications:
-ansible-playbook -v -i hosts site.yml --tags deploy
-
-
-
-Test site config from dev machine:
-wget -O - --header="Host: localhost.helloworld.com" VM_IP
-
+ansible-playbook -v -i hosts site.yml --tags deploy,test
 
 
 TODO:
-0) build apps only once
 1) define app list in a var (group_vars/all)
 1) rewrite static file paths
 2) set up a DB connection using JNDI

@@ -1,6 +1,3 @@
 [app-servers]
 # change your /etc/hosts file for this to work
 ubuntu-server-vm
-
-[build-servers]
-localhost
