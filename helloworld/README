@@ -1,7 +1,6 @@
 Launch jetty in dev mode with maven:
+export MAVEN_OPTS="-XX:+CMSClassUnloadingEnabled -XX:PermSize=256M -XX:MaxPermSize=512M"
 mvn jetty:run
 
 Make scala snippets build continuously:
 mvn scala:cc
-
-

@@ -1,12 +1,12 @@
 
 - name: copy app
-  local_action: command rsync --delete -a helloworld/target/{{item}}-1.0-SNAPSHOT {{inventory_hostname}}:~/webapps/ 
+  local_action: command rsync --delete -a helloworld/target/{{item}}-1.0 {{inventory_hostname}}:~/webapps/ 
   with_items: site_names
   tags:
     - deploy
 
 - name: install app
-  shell: rm -rf /usr/share/jetty8/webapps/{{item}} && cp -r /home/yorrick/webapps/{{item}}-1.0-SNAPSHOT /usr/share/jetty8/webapps/{{item}}
+  shell: rm -rf /usr/share/jetty8/webapps/{{item}} && cp -r /home/yorrick/webapps/{{item}}-1.0 /usr/share/jetty8/webapps/{{item}}
   with_items: site_names
   sudo: yes
   tags:
