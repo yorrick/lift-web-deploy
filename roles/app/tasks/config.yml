@@ -42,6 +42,13 @@
   tags:
     - config
 
+# TODO remove this once a real DB is used. for now, we just give 777 permissions to allow DB file to be created at Boot
+- name: give write permissions to everybody 
+  command: chmod 777 /usr/share/jetty8/
+  sudo: yes
+  tags:
+    - config
+
 - name: install jetty8 default file
   copy: src=jetty8 dest=/etc/default/jetty8
               owner=root group=root mode=0644

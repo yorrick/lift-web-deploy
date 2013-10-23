@@ -34,9 +34,6 @@ class Boot {
         LiftRules.unloadHooks.append(vendor.closeAllConnections_! _)
 
         DB.defineConnectionManager(DefaultConnectionIdentifier, vendor)        
-
-        throw new Exception("toto")
-
       } catch {
         case t : Throwable => 
           val message = t.toString

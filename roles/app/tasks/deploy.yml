@@ -6,7 +6,7 @@
     - deploy
 
 - name: install app
-  shell: rm -rf /usr/share/jetty8/webapps/{{item}} && cp -r /home/yorrick/webapps/{{item}}-1.0 /usr/share/jetty8/webapps/{{item}}
+  shell: rm -rf /usr/share/jetty8/webapps/root && cp -r /home/yorrick/webapps/{{item}}-1.0 /usr/share/jetty8/webapps/root
   with_items: site_names
   sudo: yes
   tags:

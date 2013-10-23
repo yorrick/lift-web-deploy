@@ -2,14 +2,14 @@
         listen       80;
         server_name  {{item}}.localhost.com;
 
-        access_log  /var/log/nginx/{{item}}.access.log;
+        access_log  /var/log/nginx/root.access.log;
 
-        location ~* ^(.+\.(?:jpe?g|gif|css|png|js|ico))$ {
-            root /usr/share/jetty8/webapps/{{item}};
+        location ~* ^(.+\.(?:jpe?g|gif|png|ico))$ {
+            root /usr/share/jetty8/webapps/root;
         }
 
         location / {
-            proxy_pass http://127.0.0.1:10000/{{item}}/;
+            proxy_pass http://127.0.0.1:10000/;
             proxy_set_header  X-Real-IP  $remote_addr;
             proxy_read_timeout 700;
             proxy_set_header Host $http_host;
