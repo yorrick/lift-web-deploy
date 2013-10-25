@@ -56,8 +56,78 @@
   tags:
     - config
 
+- name: install postgres
+  apt: name=postgresql-9.1 state=installed
+  sudo: yes
+  tags:
+    - config
+
+- name: create database helloworld
+  shell: psql --dbname=postgres --command="CREATE DATABASE helloworld;"; exit 0;
+  sudo: yes
+  sudo_user: postgres
+  tags:
+   - config
+
+- name: create user webapp
+  shell: psql --dbname=postgres --command="CREATE USER webapp WITH PASSWORD 'webapp'"; exit 0;
+  sudo: yes
+  sudo_user: postgres
+  tags:
+   - config
+
+- name: grant connect on helloworld to webapp user
+  shell: psql --dbname=postgres --command="GRANT CONNECT ON DATABASE helloworld TO webapp;"; exit 0;
+  sudo: yes
+  sudo_user: postgres
+  tags:
+   - config
+
+- name: test database connection for webapp user
+  shell: export PGPASSWORD='webapp'; psql --dbname=helloworld --user=webapp --host=127.0.0.1 --command="SELECT 'test me'";
+  sudo: yes
+  sudo_user: postgres
+  tags:
+   - config
+
+- name: grant usage on helloworld.public to user webapp
+  shell: psql --dbname=helloworld --command="GRANT USAGE ON SCHEMA public TO webapp;"
+  sudo: yes
+  sudo_user: postgres
+  tags:
+   - config
+   
 - name: reboot vm
   shell: reboot
   sudo: yes
   tags:
     - config
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

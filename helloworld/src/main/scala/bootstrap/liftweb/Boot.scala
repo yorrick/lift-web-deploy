@@ -26,16 +26,18 @@ class Boot {
   def boot {
     if (!DB.jndiJdbcConnAvailable_?) {
       try {
-        val vendor = new StandardDBVendor(Props.get("db.driver") openOr "org.h2.Driver",
-             Props.get("db.url") openOr 
-             "jdbc:h2:lift_proto.db;AUTO_SERVER=TRUE",
-             Props.get("db.user"), Props.get("db.password"))
+        val vendor = new StandardDBVendor(
+          Props.get("db.driver") openOr "org.h2.Driver",
+          Props.get("db.url") openOr "jdbc:h2:lift_proto.db;AUTO_SERVER=TRUE",
+          Props.get("db.user"),
+          Props.get("db.password"))
 
         LiftRules.unloadHooks.append(vendor.closeAllConnections_! _)
 
         DB.defineConnectionManager(DefaultConnectionIdentifier, vendor)        
+        logger.info("Connection to DB is working")
       } catch {
-        case t : Throwable => 
+        case t : Throwable =>
           val message = t.toString
           logger.error(s"Could not connect to database: $message")
       }
@@ -45,7 +47,8 @@ class Boot {
     // Use Lift's Mapper ORM to populate the database
     // you don't need to use Mapper to use Lift... use
     // any ORM you want
-    Schemifier.schemify(true, Schemifier.infoF _, User)
+    Schemifier.schemify(true, Schemifier.infoF _, User, UsedVehicle)
+    logger.info("Schemify done")
 
     // where to search snippet
     LiftRules.addToPackages("com.company")
