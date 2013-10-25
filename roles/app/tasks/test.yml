@@ -1,6 +1,6 @@
 
 - name: test jetty url
-  shell: 'wget -O - localhost:10000/'
+  shell: 'wget -O - --header="Host:{{item}}" localhost:10000/'
   with_items: site_names
   tags:
     - deploy

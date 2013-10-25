@@ -62,6 +62,6 @@ ansible-playbook -v -i hosts site.yml --tags deploy,test
 
 TODO
 ====
- - check props overriding in lift
- - set up virtual hosting in jetty using contexts (did not work before...) or web-jetty.xml file.
+ - create a webapp user and put war in it, use this location in jetty and nginx
+
 

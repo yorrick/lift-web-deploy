@@ -1,19 +1,26 @@
 
 - name: copy app
-  local_action: command rsync --delete -a helloworld/target/{{item}}-1.0 {{inventory_hostname}}:~/webapps/ 
+  local_action: command rsync --delete -a {{item}}/target/{{item}}-1.0 {{inventory_hostname}}:~/webapps/ 
+  with_items: site_names
+  tags:
+    - deploy
+
+- name: install jetty-web.xml file in exploded war
+  template: src=jetty-web.xml dest=~/webapps/{{item}}-1.0/WEB-INF/jetty-web.xml mode=0644
   with_items: site_names
   tags:
     - deploy
 
 - name: install app
-  shell: rm -rf /usr/share/jetty8/webapps/root && cp -r /home/yorrick/webapps/{{item}}-1.0 /usr/share/jetty8/webapps/root
+  shell: rm -rf /usr/share/jetty8/webapps/{{item}} && cp -r /home/yorrick/webapps/{{item}}-1.0 /usr/share/jetty8/webapps/{{item}}
   with_items: site_names
   sudo: yes
   tags:
     - deploy
 
 - name: execute data sql
-  shell: export PGPASSWORD='webapp'; psql --dbname=helloworld --user=webapp --host=127.0.0.1 --file=/usr/share/jetty8/webapps/root/WEB-INF/classes/init-db-data.sql
+  shell: export PGPASSWORD='webapp'; psql --dbname=helloworld --user=webapp --host=127.0.0.1 --file=/usr/share/jetty8/webapps/{{item}}/WEB-INF/classes/init-db-data.sql
+  with_items: site_names
   sudo: yes
   sudo_user: postgres
   tags:
