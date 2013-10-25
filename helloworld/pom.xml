@@ -167,6 +167,7 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>8.1.13.v20130916</version>
         <configuration>
+          <jvmArg>-Xmx1024m -Xms1024m</jvmArg>
           <contextPath>/</contextPath>
           <scanIntervalSeconds>2</scanIntervalSeconds>
         </configuration>
