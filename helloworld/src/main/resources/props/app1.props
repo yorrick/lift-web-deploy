@@ -1,4 +1,2 @@
-db.driver=org.postgresql.Driver
-db.url=jdbc:postgresql:helloworld
 db.user=webapp
 db.password=webapp

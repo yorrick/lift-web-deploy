@@ -96,7 +96,7 @@
   sudo_user: postgres
   tags:
    - config
-   
+
 - name: reboot vm
   shell: reboot
   sudo: yes

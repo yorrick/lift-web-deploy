@@ -12,6 +12,13 @@
   tags:
     - deploy
 
+- name: execute data sql
+  shell: export PGPASSWORD='webapp'; psql --dbname=helloworld --user=webapp --host=127.0.0.1 --file=/usr/share/jetty8/webapps/root/WEB-INF/classes/init-db-data.sql
+  sudo: yes
+  sudo_user: postgres
+  tags:
+   - deploy
+
 - name: install nginx site file
   template: src=nginx-config dest=/etc/nginx/sites-available/{{item}}
   with_items: site_names
