@@ -4,7 +4,7 @@
 
         access_log  /var/log/nginx/{{item}}.access.log;
 
-        location ~* ^(.+\.(?:jpe?g|gif|js|png|ico))$ {
+        location ~* ^(.+\.(?:jpe?g|gif|js|css|png|ico))$ {
             root /usr/share/jetty8/webapps/{{item}};
         }
 
