@@ -62,6 +62,16 @@ ansible-playbook -v -i hosts site.yml --tags deploy,test
 
 TODO
 ====
+ - see how lift handle js and css, serve js and css files with nginx if possible
+ - integrate bootstrap in lift app
+ - see how async task (long tasks) are handled in lift
+ - set jetty logs path for each app http://webtide.intalio.com/2011/08/sifting-logs-in-jetty-with-logback/
+    - copy jars in /usr/share/jetty8/etc/lib/logging/
+    										/ext/
+    - add libs in /usr/share/jetty8/etc/start.config ??
+    - add 2 config files in /usr/share/jetty8/etc/
+    - add config xml files to /usr/share/jetty8/etc/jetty.conf
+    - create /usr/share/jetty8/resources/logback.xml with configuration we want
  - create a webapp user and put war in it, use this location in jetty and nginx
 
 

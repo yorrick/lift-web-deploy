@@ -21,7 +21,7 @@
     - test
 
 - name: test url from host for static ressources
-  local_action: shell wget -O /dev/null --header="Host:{{item}}.localhost.com" {{inventory_hostname}}/kitten.jpeg
+  local_action: shell wget -O /dev/null --header="Host:{{item}}.localhost.com" {{inventory_hostname}}/images/kitten.jpeg
   with_items: site_names
   tags:
     - deploy   

@@ -73,6 +73,8 @@ class Boot {
     JQueryModule.InitParam.JQuery=JQueryModule.JQuery172
     JQueryModule.init()
 
+    LiftRules.autoIncludeAjaxCalc.default.set(() => (session: LiftSession) => false)
+
     //Show the spinny image when an Ajax call starts
     LiftRules.ajaxStart =
       Full(() => LiftRules.jsArtifacts.show("ajax-loader").cmd)

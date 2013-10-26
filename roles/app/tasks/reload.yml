@@ -1,3 +1,10 @@
+# We could as well set up a maintenance page in nginx during jetty reboot
+
+- name: stop nginx
+  service: name=nginx state=stopped
+  sudo: yes
+  tags:
+    - deploy
 
 - name: reload jetty
   service: name=jetty8 state=restarted
@@ -5,8 +12,8 @@
   tags:
     - deploy
 
-- name: reload nginx
-  service: name=nginx state=reloaded
+- name: start nginx
+  service: name=nginx state=started
   sudo: yes
   tags:
     - deploy
