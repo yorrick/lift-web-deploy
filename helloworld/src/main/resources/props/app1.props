@@ -1,2 +1,4 @@
 db.user=webapp
 db.password=webapp
+
+lessProdMode=true

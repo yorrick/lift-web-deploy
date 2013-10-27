@@ -1,6 +1,6 @@
 
 - name: copy app
-  local_action: command rsync --delete -a {{item}}/target/{{item}}-1.0 {{inventory_hostname}}:~/webapps/ 
+  local_action: shell rsync --delete -a {{item}}/target/{{item}}-1.0 {{inventory_hostname}}:~/webapps/ 
   with_items: site_names
   tags:
     - deploy

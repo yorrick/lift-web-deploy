@@ -33,6 +33,18 @@ sudo visudo
 %sudo   ALL=(ALL:ALL) NOPASSWD: ALL
 
 
+Set up a ssh connection with a key-pair (no password)
+ssh-keygen -t rsa
+Copy public key to ~/.ssh/authorized_keys (chmod 700 for .ssh dir, 600 for authorized_keys)
+
+Modify your hosts ~/.ssh/config files for 
+
+host ubuntu-server-vm
+    Hostname 192.168.56.2
+    IdentityFile ~/.ssh/app1_rsa
+
+
+
 Ansible
 =======
 
@@ -42,6 +54,7 @@ source ~/virtualenvs/fabric/bin/activate
 Test connection to nodes:
 ssh yorrick@VM_IP -i ~/.ssh/app1_rsa
 or
+ssh-agent bash ?
 ssh-add ~/.ssh/app1_rsa
 ssh VM_IP
 or
@@ -62,7 +75,6 @@ ansible-playbook -v -i hosts site.yml --tags deploy,test
 
 TODO
 ====
- - see how lift handle js and css, serve js and css files with nginx if possible
  - integrate bootstrap in lift app
  - see how async task (long tasks) are handled in lift
  - set jetty logs path for each app http://webtide.intalio.com/2011/08/sifting-logs-in-jetty-with-logback/
