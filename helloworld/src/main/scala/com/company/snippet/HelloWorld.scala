@@ -95,8 +95,8 @@ object Login {
   def render = {
     println("[Login.login] enter.")
 
-    "#user" #> SHtml.text(user.is, user(_), "maxlength" -> "40") &
-    "#pass" #> SHtml.password(pass.is, pass(_)) &
+    "#user" #> SHtml.text(user.is, user(_), "maxlength" -> "40", "placeholder" -> "Username") &
+    "#pass" #> SHtml.password(pass.is, pass(_), "placeholder" -> "Password") &
     "#submit" #> (SHtml.hidden(auth) ++ <input type="submit" value="Login"/>) andThen SHtml.makeFormsAjax
   }
 }
