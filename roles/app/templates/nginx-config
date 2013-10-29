@@ -4,7 +4,12 @@
 
         access_log  /var/log/nginx/{{item}}.access.log;
 
-        location ~* ^(.+\.(?:jpe?g|gif|js|css|png|ico))$ {
+        location ~* ^(.+\.(?:jpe?g|gif|css|png|ico))$ {
+            root /usr/share/jetty8/webapps/{{item}};
+        }
+
+        # on JS files under /js/ will be served by nginx, others, like cometAjax.js, must be served by app server since app server inserts the user's session id
+        location ~* /js/.+.js$ {
             root /usr/share/jetty8/webapps/{{item}};
         }
 
