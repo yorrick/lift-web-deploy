@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <title>Home</title>
@@ -21,21 +21,39 @@
 
           <img src="/images/kitten.jpeg"/>
 
-          <h3>List of used vehicles:</h3>
-          <ul class="lift:helloWorld.usedVehicles">
-                <li>(1, 2) TO REPLACE</li>
-                <li>(3, 4) TO REPLACE</li>
-          </ul>
+          <!--<h3>List of used vehicles:</h3>-->
+          <!--<ul class="lift:helloWorld.usedVehicles">-->
+                <!--<li>(1, 2) TO REPLACE</li>-->
+                <!--<li>(3, 4) TO REPLACE</li>-->
+          <!--</ul>-->
 
-        <form class="lift:Login">
+        <lift:comet type="VehicleActor" name="Other">
+            <h3>Used vehicles</h3>
+            <!--<table>-->
+                <!--<thead>-->
+                    <!--<td>Id</td>-->
+                    <!--<td>Description</td>-->
+                    <!--<td>Generated id</td>-->
+                <!--</thead>-->
+                <vehicle:entries>
+                    <tbody id="entries">
+                        <tr>
+                            <td>Missing vehicles</td>  <td></td>  <td></td>
+                        </tr>
+                    </tbody>
+                </vehicle:entries>
+            <!--</table>-->
+        </lift:comet>
+
+        <form class="lift:VehicleSnippet">
             <table>
                 <tr>
-                    <td align="right">User name:</td>
-                    <td><input id="user" type="text"></td>
+                    <td align="right">Description: </td>
+                    <td><input id="description" type="text"></td>
                 </tr>
                 <tr>
-                    <td align="right">Password:</td>
-                    <td><input id="pass" type="text"></td>
+                    <td align="right">Generated id:</td>
+                    <td><input id="generated-id" type="text"></td>
                 </tr>
                 <tr>
                     <td colspan="2"><input id="submit" type="submit"></td>
@@ -43,9 +61,31 @@
             </table>
         </form>
 
-        <lift:comet type="Clock" name="Other">
-            Current Time: <clk:time>Missing Clock</clk:time>
-        </lift:comet>
+        <!--<form class="lift:Login">-->
+            <!--<table>-->
+                <!--<tr>-->
+                    <!--<td align="right">User name:</td>-->
+                    <!--<td><input id="user" type="text"></td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td align="right">Password:</td>-->
+                    <!--<td><input id="pass" type="text"></td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td colspan="2"><input id="submit" type="submit"></td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        <!--</form>-->
+
+        <!--<span class="lift:admin.updateClocks">-->
+            <!--<input type="button" id="button"/>-->
+        <!--</span>-->
+
+        <!--<br>-->
+
+        <!--<lift:comet type="Clock" name="Other">-->
+            <!--Current Time: <clk:time>Missing Clock</clk:time>-->
+        <!--</lift:comet>-->
 
       </p>
     </div>

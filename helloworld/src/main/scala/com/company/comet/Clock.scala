@@ -5,12 +5,16 @@ import http._
 import SHtml._
 import net.liftweb.common.{Box, Full}
 import net.liftweb.util._
-import net.liftweb.actor._
 import net.liftweb.util.Helpers._
 import net.liftweb.http.js.JsCmds.{SetHtml}
-import net.liftweb.http.js.JE.Str
 import java.util.Date
 import scala.xml.Text
+import scala.actors.Actor
+
+
+case object Tick
+case class SubscribeClock(clock : Clock)
+case class UnsubClock(clock : Clock)
 
 
 class Clock extends CometActor {
@@ -18,19 +22,53 @@ class Clock extends CometActor {
 
   def render = bind("time" -> timeSpan)
 
-  def timeSpan = (<span id="time">{now}</span>)
+  def timeSpan = <span id="time">{now}</span>
 
   // schedule a ping every 10 seconds so we redraw
   Schedule.schedule(this, Tick, 10000L)
 
   override def lowPriority : PartialFunction[Any, Unit] = {
     case Tick => {
-      println("Got tick " + new Date());
-
       partialUpdate(SetHtml("time", Text(now.toString)))
       // schedule an update in 10 seconds
       Schedule.schedule(this, Tick, 10000L)
     }
   }
+
+  override def localSetup {
+    ClockMaster ! SubscribeClock(this)
+    super.localSetup()
+  }
+
+  override def localShutdown {
+    ClockMaster ! UnsubClock(this)
+    super.localShutdown()
+  }
 }
-case object Tick
+
+
+/**
+ * Stores all comet actors
+ */
+object ClockMaster extends Actor {
+
+  private var clocks : List[Clock] = Nil
+
+  def act = {
+    loop {
+      react {
+        case SubscribeClock(clk) =>
+          println("SubscribeClock")
+          clocks ::= clk
+        case UnsubClock(clk) =>
+          println("UnsubClock")
+          clocks = clocks.filter(_ != clk)
+        case Tick =>
+          println("Tick")
+          clocks.foreach(_ ! Tick)
+      }
+    }
+  }
+
+  start()
+}
