@@ -6,7 +6,7 @@ import SHtml._
 import net.liftweb.common.{Box, Full}
 import net.liftweb.util._
 import net.liftweb.util.Helpers._
-import net.liftweb.http.js.JsCmds.{SetHtml}
+import net.liftweb.http.js.JsCmds.{Run, OnLoad, SetHtml}
 import java.util.Date
 import scala.xml.{Text, NodeSeq}
 import scala.actors.Actor
@@ -50,8 +50,11 @@ class VehicleActor extends CometActor {
 
   override def lowPriority : PartialFunction[Any, Unit] = {
     case VehicleEvent(vehicles) => {
-      println("send JSCmd to browser")
-      partialUpdate(SetHtml("entries", renderVehicles(vehicles)))
+//      partialUpdate(SetHtml("entries", renderVehicles(vehicles)))
+//      TODO call an external JS function defined in some JS file
+      val html = renderVehicles(vehicles)
+      val js = s"window.App.views.usedVehicles.updateVehiclesTable('$html')"
+      partialUpdate(Run(js))
     }
   }
 

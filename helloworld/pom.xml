@@ -113,6 +113,7 @@
         <testSourceDirectory>src/test/scala</testSourceDirectory>
         <plugins>
 
+
             <plugin>
                 <groupId>org.lesscss</groupId>
                 <artifactId>lesscss-maven-plugin</artifactId>
@@ -197,9 +198,9 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>net.sf.alchim</groupId>
+                <groupId>net.alchim31.maven</groupId>
                 <artifactId>yuicompressor-maven-plugin</artifactId>
-                <version>0.7.1</version>
+                <version>1.1</version>
                 <executions>
                     <execution>
                         <goals>
@@ -208,9 +209,29 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <nosuffix>true</nosuffix>
+                    <nomunge>true</nomunge>
+                    <nosuffix>false</nosuffix>
+                    <excludes>
+                        <exclude>**/external/*.js</exclude>
+                        <exclude>**/*.css</exclude>
+                    </excludes>
+                    <jswarn>false</jswarn>
+                    <aggregations>
+                        <aggregation>
+                            <!--<inputDir>src/main/webapp/js/snippets/</inputDir>-->
+                            <inputDir>${project.build.directory}/${project.build.finalName}/js/snippets/</inputDir>
+                            <insertNewLine>true</insertNewLine>
+                            <removeIncluded>true</removeIncluded>
+                            <includes>
+                                <include>apps-min.js</include>
+                                <include>*-min.js</include>
+                            </includes>
+                            <output>${project.build.directory}/${project.build.finalName}/js/snippets/all-snippets.js</output>
+                        </aggregation>
+                    </aggregations>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-idea-plugin</artifactId>

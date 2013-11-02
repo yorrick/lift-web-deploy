@@ -13,6 +13,9 @@ import mapper._
 
 import com.company.model._
 import net.liftmodules.JQueryModule
+import scala.xml.{NodeSeq, Node, Group}
+import net.liftweb.http.provider.HTTPCookie
+import com.company.snippet.JavascriptManager
 
 
 /**
@@ -91,7 +94,32 @@ class Boot {
 
     // Use HTML5 for rendering
     LiftRules.htmlProperties.default.set((r: Req) =>
-      new Html5Properties(r.userAgent))    
+      new Html5Properties(r.userAgent))
+
+    val oldConvertResponse = LiftRules.convertResponse
+
+    val myConvertResponse: PartialFunction[(Any, List[(String, String)], List[HTTPCookie], Req), LiftResponse] = {
+      case ((ns: NodeSeq, code: Int), headers, cookies, req) =>
+        println("NodeSeq and response code")
+        println(ns \ "head")
+        // TODO add JS scrips in html head
+        println(JavascriptManager.files)
+        oldConvertResponse((ns, code), headers, cookies, req)
+      case (r, headers, cookies, req) =>
+        oldConvertResponse(r, headers, cookies, req)
+    }
+
+    LiftRules.convertResponse = myConvertResponse
+
+//    val testTransform: LiftResponse => LiftResponse = {response: LiftResponse =>
+//      response match {
+//        case InMemoryResponse(data, headers, cookies, code) =>
+//          println(data)
+//          response
+//        case _ => response
+//      }
+//    }
+//    LiftRules.responseTransformers.append(testTransform)
 
     // Make a transaction span the whole HTTP request
     S.addAround(DB.buildLoanWrapper)

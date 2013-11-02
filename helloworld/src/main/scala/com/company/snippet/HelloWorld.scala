@@ -14,6 +14,7 @@ import net.liftweb.http.js.JE.JsRaw
 import com.company.comet._
 import net.liftweb.http.js.JsCmd
 import com.company.comet.VehicleEvent
+import scala.collection.mutable
 
 
 //object description extends RequestVar("Enter your description here")
@@ -34,8 +35,26 @@ import com.company.comet.VehicleEvent
 //}
 
 
-object VehicleSnippet {
-  private[this] val logger = Logger(getClass().getName());
+object JavascriptManager {
+
+  // TODO synchronize me?
+  val files = mutable.MutableList[String]()
+
+}
+
+trait ModularJS {
+
+  // TODO register to JavascriptManager, JavascriptManager will call jsFiles later
+  JavascriptManager.files ++= jsFiles
+  def jsFiles: List[String]
+}
+
+
+
+// TODO extend loggable?
+object VehicleSnippet extends ModularJS {
+
+  override val jsFiles = "/js/snippets/usedVehicles.js" :: Nil
 
   private object description extends RequestVar("")
   private object generatedId extends RequestVar[Long](0)
@@ -50,8 +69,6 @@ object VehicleSnippet {
   def getUsedVehiclesStrings: List[String] = UsedVehicle.findAll.map(_.printableDescription)
 
   def render = {
-    println("[VehicleSnippet] enter.")
-
     "#description" #> SHtml.text(description.is, description(_), "" +
       "maxlength" -> "40", "placeholder" -> "Description") &
     "#generated-id" #> SHtml.text(description.is, s => generatedId(tryo(s.toLong) openOr -1),
