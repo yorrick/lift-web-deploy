@@ -4,6 +4,7 @@ import net.liftweb.http.RequestVar
 import scala.collection.mutable
 import scala.xml.transform.{RuleTransformer, RewriteRule}
 import scala.xml._
+import net.liftweb.util.Props
 
 
 object jsManager {
@@ -37,13 +38,15 @@ object jsManager {
   }
 
   def generatedNewHtml(oldHtml: NodeSeq): NodeSeq = {
-    val jsFiles = allJsFiles
-    val jsImports = allJSNodes(jsFiles)
 
-    // this is developpment mode, so we add all JS files separately
-    // in production, only one compressed JS file will be served
-    val newHtml = new RuleTransformer(new AddChildrenTo("head", jsImports)).transform(oldHtml)
+    val jsImports = Props.getBool("jsProdMode", true) match {
+      case true =>
+        <script id="jquery" src="/js/snippets/all-snippets.js" type="text/javascript"></script>
+      case false =>
+        val jsFiles = allJsFiles
+        allJSNodes(jsFiles)
+    }
 
-    newHtml
+    new RuleTransformer(new AddChildrenTo("head", jsImports)).transform(oldHtml)
   }
 }

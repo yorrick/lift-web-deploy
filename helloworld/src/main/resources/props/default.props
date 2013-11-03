@@ -2,3 +2,4 @@ db.user=dev
 db.password=dev
 
 lessProdMode=false
+jsProdMode=false
