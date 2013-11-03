@@ -10,7 +10,7 @@ class Utils {
       if (Props.getBool("lessProdMode", true)) {
         linkNode
       } else {
-        val lessCompiler = <script id="less-compiler" src="/js/less.js" type="text/javascript"></script>
+        val lessCompiler = <script id="less-compiler" src="/js/external/less.js" type="text/javascript"></script>
         val href = (linkNode \ "@href").toString
 
         val newLinkNone = href.split('/').toList match {

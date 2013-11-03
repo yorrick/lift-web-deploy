@@ -218,11 +218,11 @@
                     <jswarn>false</jswarn>
                     <aggregations>
                         <aggregation>
-                            <!--<inputDir>src/main/webapp/js/snippets/</inputDir>-->
                             <inputDir>${project.build.directory}/${project.build.finalName}/js/snippets/</inputDir>
                             <insertNewLine>true</insertNewLine>
                             <removeIncluded>true</removeIncluded>
                             <includes>
+                                <!-- Include apps.js first since t's needed by snippet JS -->
                                 <include>apps-min.js</include>
                                 <include>*-min.js</include>
                             </includes>

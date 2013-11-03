@@ -13,9 +13,10 @@ import mapper._
 
 import com.company.model._
 import net.liftmodules.JQueryModule
-import scala.xml.{NodeSeq, Node, Group}
+import scala.xml.{NodeSeq, Node, Group, Elem}
 import net.liftweb.http.provider.HTTPCookie
-import com.company.snippet.JavascriptManager
+import com.company.snippet.{JSManager}
+import scala.xml.transform.RewriteRule
 
 
 /**
@@ -101,10 +102,9 @@ class Boot {
     val myConvertResponse: PartialFunction[(Any, List[(String, String)], List[HTTPCookie], Req), LiftResponse] = {
       case ((ns: NodeSeq, code: Int), headers, cookies, req) =>
         println("NodeSeq and response code")
-        println(ns \ "head")
-        // TODO add JS scrips in html head
-        println(JavascriptManager.files)
-        oldConvertResponse((ns, code), headers, cookies, req)
+        val newHtml = JSManager.generatedNewHtml(ns)
+//        println(newHtml)
+        oldConvertResponse((newHtml, code), headers, cookies, req)
       case (r, headers, cookies, req) =>
         oldConvertResponse(r, headers, cookies, req)
     }
