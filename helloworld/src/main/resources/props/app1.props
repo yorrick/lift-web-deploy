@@ -1,5 +1,6 @@
 db.user=webapp
 db.password=webapp
 
-lessProdMode=true
+# values dev or prod
+cssMode=prod
 jsProdMode=true

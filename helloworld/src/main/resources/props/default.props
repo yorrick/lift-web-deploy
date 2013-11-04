@@ -1,5 +1,7 @@
 db.user=dev
 db.password=dev
 
-lessProdMode=false
+# values dev or prod
+cssMode=dev
+
 jsProdMode=false
