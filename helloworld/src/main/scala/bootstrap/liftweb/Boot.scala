@@ -13,9 +13,6 @@ import mapper._
 
 import com.company.model._
 import net.liftmodules.JQueryModule
-import scala.xml.{NodeSeq}
-import net.liftweb.http.provider.HTTPCookie
-import com.company.lib.jsManager
 
 
 /**
@@ -96,31 +93,8 @@ class Boot {
     LiftRules.htmlProperties.default.set((r: Req) =>
       new Html5Properties(r.userAgent))
 
-    val oldConvertResponse = LiftRules.convertResponse
-
-    val myConvertResponse: PartialFunction[(Any, List[(String, String)], List[HTTPCookie], Req), LiftResponse] = {
-      case ((ns: NodeSeq, code: Int), headers, cookies, req) =>
-        println("NodeSeq and response code")
-        val newHtml = jsManager.generatedNewHtml(ns)
-//        println(newHtml)
-        oldConvertResponse((newHtml, code), headers, cookies, req)
-      case (r, headers, cookies, req) =>
-        oldConvertResponse(r, headers, cookies, req)
-    }
-
-    LiftRules.convertResponse = myConvertResponse
-
-//    val testTransform: LiftResponse => LiftResponse = {response: LiftResponse =>
-//      response match {
-//        case InMemoryResponse(data, headers, cookies, code) =>
-//          println(data)
-//          response
-//        case _ => response
-//      }
-//    }
-//    LiftRules.responseTransformers.append(testTransform)
-
     // Make a transaction span the whole HTTP request
+    // TODO install a transaction manager
     S.addAround(DB.buildLoanWrapper)
   }
 }

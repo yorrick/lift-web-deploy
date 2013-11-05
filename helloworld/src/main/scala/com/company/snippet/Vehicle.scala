@@ -5,12 +5,9 @@ import com.company.comet.{VehicleMaster, UsedVehicleManager}
 import com.company.model.UsedVehicle
 import net.liftweb.util.Helpers._
 import com.company.comet.VehicleEvent
-import com.company.lib.jsManager
 
 
-class Vehicle extends jsManager.JSSnippet {
-
-  override val jsFiles = "/js/snippets/usedVehicles.js" :: Nil
+class Vehicle {
 
   private object description extends RequestVar("")
   private object generatedId extends RequestVar[Long](0)

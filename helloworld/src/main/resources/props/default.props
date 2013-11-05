@@ -1,7 +1,5 @@
 db.user=dev
 db.password=dev
 
-# values dev or prod
-cssMode=dev
-
-jsProdMode=false
+# comma separated value
+removeClasses=.prod

@@ -7,14 +7,15 @@ import net.liftweb.util.Helpers._
 
 object Utils {
 
+  val EmptyCssCel = "" #> NodeSeq.Empty
+
   def manageHead = {
-    val classesToRemove = Props.get("cssMode", "dev") match {
-      case "dev" => ".prodCss"
-      case "prod" => ".devCss"
-      case _ => ".devCss"
+    val cssClasses: List[String] = Props.get("removeClasses", "").split(",").toList
+    val cssSels: List[CssSel] = cssClasses map {cssClassToRemove: String =>
+       cssClassToRemove #> NodeSeq.Empty
     }
 
-    classesToRemove #> NodeSeq.Empty
+    cssSels.foldLeft(EmptyCssCel)((s1: CssSel, s2: CssSel) => s1 and s2)
   }
 }
 

@@ -1,6 +1,5 @@
 db.user=webapp
 db.password=webapp
 
-# values dev or prod
-cssMode=prod
-jsProdMode=true
+# comma separated value
+removeClasses=.dev
