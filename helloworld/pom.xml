@@ -214,6 +214,7 @@
                     <nomunge>true</nomunge>
                     <nosuffix>false</nosuffix>
                     <excludes>
+                        <!-- do not compress external JS -->
                         <exclude>js/external/*.js</exclude>
                         <!-- do not compress css files as lesscss mojo already does compression -->
                         <exclude>**/*.css</exclude>
@@ -231,14 +232,37 @@
                             </includes>
                             <output>${project.build.directory}/${project.build.finalName}/js/snippets/all-snippets.js</output>
                         </aggregation>
+
+                        <aggregation>
+                            <inputDir>${project.basedir}/src/main/webapp/js/external/</inputDir>
+                            <insertNewLine>true</insertNewLine>
+                            <removeIncluded>false</removeIncluded>
+                            <includes>
+                                <!-- Include jquery first -->
+                                <include>jquery.js</include>
+                                <include>*.js</include>
+                            </includes>
+                            <output>${project.build.directory}/${project.build.finalName}/js/external/all-external.js</output>
+                        </aggregation>
+
                         <aggregation>
                             <inputDir>${project.build.directory}/${project.build.finalName}/css/compiled/</inputDir>
                             <insertNewLine>true</insertNewLine>
-                            <removeIncluded>true</removeIncluded>
+                            <removeIncluded>false</removeIncluded>
                             <includes>
                                 <include>*.css</include>
                             </includes>
-                            <output>${project.build.directory}/${project.build.finalName}/css/compiled/all.css</output>
+                            <output>${project.build.directory}/${project.build.finalName}/css/compiled/all-compiled.css</output>
+                        </aggregation>
+
+                        <aggregation>
+                            <inputDir>${project.basedir}/src/main/webapp/css/external/</inputDir>
+                            <insertNewLine>true</insertNewLine>
+                            <removeIncluded>false</removeIncluded>
+                            <includes>
+                                <include>**/*.css</include>
+                            </includes>
+                            <output>${project.build.directory}/${project.build.finalName}/css/external/all-external.css</output>
                         </aggregation>
                     </aggregations>
                 </configuration>

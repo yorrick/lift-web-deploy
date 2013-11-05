@@ -2,5 +2,4 @@ db.user=dev
 db.password=dev
 
 # comma separated value
-# removeClasses=.prod
-removeClasses=.dev
+removeClasses=.prod
