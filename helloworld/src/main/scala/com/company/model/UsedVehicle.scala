@@ -1,7 +1,7 @@
 package com.company.model
 
 import net.liftweb.mapper._
-import net.liftweb.common._
+import net.liftweb.mapper.AjaxEditableField
 import net.liftweb.util.FieldError
 
 

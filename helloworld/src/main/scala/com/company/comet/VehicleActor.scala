@@ -8,7 +8,7 @@ import net.liftweb.util._
 import net.liftweb.util.Helpers._
 import net.liftweb.http.js.JsCmds.{Run, OnLoad, SetHtml}
 import java.util.Date
-import scala.xml.{Text, NodeSeq}
+import scala.xml.{Null, Attribute, Text, NodeSeq}
 import scala.actors.Actor
 import com.company.model.UsedVehicle
 
@@ -39,20 +39,22 @@ class VehicleActor extends CometActor {
   def render = bind("entries" -> renderVehicles(UsedVehicleManager.getUsedVehicles))
 
   def renderVehicles(vehicles: List[UsedVehicle]): NodeSeq = {
-    val liTags = vehicles.map(vehicle =>
+    val tags = vehicles.map(vehicle =>
 
-      <tr><td>{vehicle.id}</td><td>{vehicle.description}</td><td>{vehicle.generatedId}</td></tr>
+      <tr>
+        <td>{vehicle.description}</td>
+        <td>{vehicle.generatedId}</td>
+      </tr> % Attribute(None, "data-vehicle-id", Text(vehicle.id.toString), Null)
 
     ).foldLeft(NodeSeq.Empty)((n1, n2) => n1.union(n2))
 
-    <table id="entries">{liTags}</table>
+    <table id="entries">{tags}</table>
   }
 
   override def lowPriority : PartialFunction[Any, Unit] = {
     case VehicleEvent(vehicles) => {
 //      partialUpdate(SetHtml("entries", renderVehicles(vehicles)))
-//      TODO call an external JS function defined in some JS file
-      val html = renderVehicles(vehicles)
+      val html = renderVehicles(vehicles).toString.replaceAll("\n", "")
       val js = s"window.App.views.usedVehicles.updateVehiclesTable('$html')"
       partialUpdate(Run(js))
     }

@@ -5,9 +5,10 @@ import com.company.comet.{VehicleMaster, UsedVehicleManager}
 import com.company.model.UsedVehicle
 import net.liftweb.util.Helpers._
 import com.company.comet.VehicleEvent
+import net.liftweb.common.Loggable
 
 
-class Vehicle {
+class Vehicle extends Loggable {
 
   private object description extends RequestVar("")
   private object generatedId extends RequestVar[Long](0)
