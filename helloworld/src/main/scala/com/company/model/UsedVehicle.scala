@@ -15,7 +15,6 @@ class UsedVehicle extends LongKeyedMapper[UsedVehicle] {
 
   object description extends MappedString(this, 100) {
     def checkDescription(desc: String): List[FieldError] = {
-      println(s"Checking description value $desc")
       List[FieldError]()
     }
   }

@@ -6,9 +6,12 @@ import com.company.model.UsedVehicle
 import net.liftweb.util.Helpers._
 import com.company.comet.VehicleEvent
 import net.liftweb.common.Loggable
+import scala.xml.{Null, Attribute, Text, NodeSeq}
+import net.liftweb.http.js.JsCmd
+import net.liftweb.http.js.JsCmds._
 
 
-class Vehicle extends Loggable {
+object Vehicle extends Loggable {
 
   private object description extends RequestVar("")
   private object generatedId extends RequestVar[Long](0)
@@ -17,14 +20,26 @@ class Vehicle extends Loggable {
     UsedVehicleManager.saveUsedVehicle(description.is, generatedId.is)
   }
 
-  def removeUsedVehicle() {
-    UsedVehicleManager.saveUsedVehicle(description.is, generatedId.is)
+  def renderVehicles(vehicles: List[UsedVehicle]): NodeSeq = {
+    val tags = vehicles.map(vehicle => {
 
-    // sends a message to master actor
-    VehicleMaster ! VehicleEvent(UsedVehicleManager.getUsedVehicles)
+      val removeFunction: () => JsCmd = {() =>
+        UsedVehicleManager.removeUsedVehicle(vehicle.id.get)
+        Noop
+      }
+
+      val removeButton = SHtml.ajaxButton(Text("Remove"), removeFunction)
+
+      <tr>
+        <td>{vehicle.description}</td>
+        <td>{vehicle.generatedId}</td>
+        <td>{removeButton}</td>
+      </tr> % Attribute(None, "data-vehicle-id", Text(vehicle.id.toString), Null)
+    }
+    ).foldLeft(NodeSeq.Empty)((n1, n2) => n1.union(n2))
+
+    <table id="entries">{tags}</table>
   }
-
-  def getUsedVehiclesStrings: List[String] = UsedVehicle.findAll.map(_.printableDescription)
 
   def render = {
     "#description" #> SHtml.text(description.is, description(_), "" +

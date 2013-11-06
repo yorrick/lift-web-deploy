@@ -13,21 +13,9 @@
             Welcome to your Lift app at <span id="timeToto">Time goes here</span>!
           </span>
 
-          <br>
+          <!--<img src="/images/kitten.jpeg"/>-->
 
-          <div id="header">
-            <span>Tototototototoottoot</span>
-          </div>
-
-          <img src="/images/kitten.jpeg"/>
-
-          <!--<h3>List of used vehicles:</h3>-->
-          <!--<ul class="lift:helloWorld.usedVehicles">-->
-                <!--<li>(1, 2) TO REPLACE</li>-->
-                <!--<li>(3, 4) TO REPLACE</li>-->
-          <!--</ul>-->
-
-        <lift:comet type="VehicleActor" name="Other">
+        <div lift="comet?type=VehicleActor">
             <h3>Used vehicles</h3>
             <!--<table>-->
                 <!--<thead>-->
@@ -35,15 +23,18 @@
                     <!--<td>Description</td>-->
                     <!--<td>Generated id</td>-->
                 <!--</thead>-->
-                <vehicle:entries>
-                    <tbody id="entries">
-                        <tr>
-                            <td>Missing vehicles</td><td></td>
-                        </tr>
-                    </tbody>
-                </vehicle:entries>
+                <div id="entries">
+                    Missing vehicles
+                </div>
+                <!--<vehicle:entries>-->
+                    <!--<tbody id="entries">-->
+                        <!--<tr>-->
+                            <!--<td>Missing vehicles</td><td></td>-->
+                        <!--</tr>-->
+                    <!--</tbody>-->
+                <!--</vehicle:entries>-->
             <!--</table>-->
-        </lift:comet>
+        </div>
 
         <form class="lift:Vehicle">
             <table>

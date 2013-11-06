@@ -3,7 +3,7 @@ package com.company.comet
 import net.liftweb._
 import http._
 import SHtml._
-import net.liftweb.common.{Box, Full}
+import net.liftweb.common.{Loggable, Box, Full}
 import net.liftweb.util._
 import net.liftweb.util.Helpers._
 import net.liftweb.http.js.JsCmds.{SetHtml}
@@ -50,7 +50,7 @@ class Clock extends CometActor {
 /**
  * Stores all comet actors
  */
-object ClockMaster extends Actor {
+object ClockMaster extends Actor with Loggable {
 
   private var clocks : List[Clock] = Nil
 
@@ -58,13 +58,13 @@ object ClockMaster extends Actor {
     loop {
       react {
         case SubscribeClock(clk) =>
-          println("SubscribeClock")
+          logger.info("SubscribeClock")
           clocks ::= clk
         case UnsubClock(clk) =>
-          println("UnsubClock")
+          logger.info("UnsubClock")
           clocks = clocks.filter(_ != clk)
         case Tick =>
-          println("Tick")
+          logger.info("Tick")
           clocks.foreach(_ ! Tick)
       }
     }
