@@ -1,0 +1,25 @@
+@tableWidth: 400px;
+@descriptionWidth: 65%;
+@generatedIdWidth: 25%;
+@removeLinkWidth: 10%;
+
+table {
+    table-layout: fixed;
+    width: @tableWidth;
+}
+
+table#entries th:first-child, table#entries td:first-child {
+    overflow: hidden;
+    width: @descriptionWidth;
+}
+
+table#entries th:second-child, table#entries td:second-child {
+    overflow: hidden;
+    width: @descriptionWidth;
+}
+
+table#entries th:third-child, table#entries td:third-child {
+    overflow: hidden;
+    width: @descriptionWidth;
+}
+

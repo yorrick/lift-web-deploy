@@ -14,12 +14,13 @@ App.views.usedVehicles.updateVehiclesTable = function(sentTable) {
   var toCreate = differences.idsToCreate
 
   toRemove.forEach(function (id) {
-    $("[data-vehicle-id=" + id + "]").remove()
+    $("[data-vehicle-id=" + id + "]").fadeOut().remove();
   });
 
   toCreate.forEach(function (id) {
-    var nodeToAppend = $(sentTable).find("[data-vehicle-id=" + id + "]");
+    var nodeToAppend = $(sentTable).find("[data-vehicle-id=" + id + "]").css("display", "none");
     existingTable.append(nodeToAppend);
+    nodeToAppend.fadeIn();
   });
 
   $("#description").val('');

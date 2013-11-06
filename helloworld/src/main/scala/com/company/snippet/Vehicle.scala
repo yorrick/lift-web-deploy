@@ -15,6 +15,10 @@ class Vehicle extends Loggable {
 
   def saveUsedVehicle() {
     UsedVehicleManager.saveUsedVehicle(description.is, generatedId.is)
+  }
+
+  def removeUsedVehicle() {
+    UsedVehicleManager.saveUsedVehicle(description.is, generatedId.is)
 
     // sends a message to master actor
     VehicleMaster ! VehicleEvent(UsedVehicleManager.getUsedVehicles)

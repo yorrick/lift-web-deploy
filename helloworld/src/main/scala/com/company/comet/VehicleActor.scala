@@ -6,11 +6,12 @@ import SHtml._
 import net.liftweb.common.{Box, Full}
 import net.liftweb.util._
 import net.liftweb.util.Helpers._
-import net.liftweb.http.js.JsCmds.{Run, OnLoad, SetHtml}
-import java.util.Date
+import net.liftweb.http.js.JsCmds.{Run, Noop}
 import scala.xml.{Null, Attribute, Text, NodeSeq}
 import scala.actors.Actor
 import com.company.model.UsedVehicle
+import net.liftweb.mapper.By
+import net.liftweb.http.js.JsCmd
 
 
 case class VehicleEvent(val vehicles: List[UsedVehicle])
@@ -28,6 +29,16 @@ object UsedVehicleManager {
   def saveUsedVehicle(description: String, generatedId: Long) {
     val mapper = UsedVehicle.create.description(description).generatedId(generatedId)
     mapper.save()
+
+    // sends a message to master actor
+    VehicleMaster ! VehicleEvent(UsedVehicleManager.getUsedVehicles)
+  }
+
+  def removeUsedVehicle(id: Long) {
+    UsedVehicle.findAll(By(UsedVehicle.id, id)).foreach(_.delete_!)
+
+    // sends a message to master actor
+    VehicleMaster ! VehicleEvent(UsedVehicleManager.getUsedVehicles)
   }
 
 }
@@ -39,13 +50,21 @@ class VehicleActor extends CometActor {
   def render = bind("entries" -> renderVehicles(UsedVehicleManager.getUsedVehicles))
 
   def renderVehicles(vehicles: List[UsedVehicle]): NodeSeq = {
-    val tags = vehicles.map(vehicle =>
+    val tags = vehicles.map(vehicle => {
+
+      val removeFunction: () => JsCmd = {() =>
+        UsedVehicleManager.removeUsedVehicle(vehicle.id)
+        Noop
+      }
+
+      val removeButton = SHtml.ajaxButton(Text("Remove"), removeFunction)
 
       <tr>
         <td>{vehicle.description}</td>
         <td>{vehicle.generatedId}</td>
+        <td>{removeButton}</td>
       </tr> % Attribute(None, "data-vehicle-id", Text(vehicle.id.toString), Null)
-
+    }
     ).foldLeft(NodeSeq.Empty)((n1, n2) => n1.union(n2))
 
     <table id="entries">{tags}</table>
@@ -53,7 +72,7 @@ class VehicleActor extends CometActor {
 
   override def lowPriority : PartialFunction[Any, Unit] = {
     case VehicleEvent(vehicles) => {
-//      partialUpdate(SetHtml("entries", renderVehicles(vehicles)))
+      // removes all break line chars since it breaks JS call
       val html = renderVehicles(vehicles).toString.replaceAll("\n", "")
       val js = s"window.App.views.usedVehicles.updateVehiclesTable('$html')"
       partialUpdate(Run(js))
