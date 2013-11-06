@@ -1,6 +1,6 @@
 package com.company.snippet
 
-import scala.xml.{Null, NodeSeq, Text, Attribute}
+import scala.xml.NodeSeq
 import net.liftweb.util._
 import net.liftweb.util.Helpers._
 

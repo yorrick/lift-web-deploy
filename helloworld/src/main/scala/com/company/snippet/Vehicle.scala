@@ -21,7 +21,7 @@ object Vehicle extends Loggable {
   }
 
   def renderVehicles(vehicles: List[UsedVehicle]): NodeSeq = {
-    val tags = vehicles.map(vehicle => {
+    val trs = vehicles.map(vehicle => {
 
       val removeFunction: () => JsCmd = {() =>
         UsedVehicleManager.removeUsedVehicle(vehicle.id.get)
@@ -38,14 +38,12 @@ object Vehicle extends Loggable {
     }
     ).foldLeft(NodeSeq.Empty)((n1, n2) => n1.union(n2))
 
-    <table id="entries">{tags}</table>
+    trs
   }
 
   def render = {
-    "#description" #> SHtml.text(description.is, description(_), "" +
-      "maxlength" -> "40", "placeholder" -> "Description") &
-      "#generated-id" #> SHtml.text(description.is, s => generatedId(tryo(s.toLong) openOr -1),
-        "placeholder" -> "Generated id") &
-      "#submit" #> (SHtml.hidden(saveUsedVehicle) ++ <input type="submit" value="Create a new vehicle"/>) andThen SHtml.makeFormsAjax
+    "#description" #> SHtml.text(description.is, description(_), "" + "maxlength" -> "40", "placeholder" -> "Description") &
+    "#generated-id" #> SHtml.text(description.is, s => generatedId(tryo(s.toLong) openOr -1), "placeholder" -> "Generated id") &
+    "#submit" #> (SHtml.hidden(saveUsedVehicle) ++ <input type="submit" value="Create a new vehicle"/>) andThen SHtml.makeFormsAjax
   }
 }

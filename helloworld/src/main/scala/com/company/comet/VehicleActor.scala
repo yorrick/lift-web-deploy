@@ -47,7 +47,12 @@ object UsedVehicleManager {
 
 class VehicleActor extends CometActor {
 
-  def render = "#entries" #> Vehicle.renderVehicles(UsedVehicleManager.getUsedVehicles)
+  def render = "#entries *" #> {html: NodeSeq =>
+    println(s"html: $html")
+    val result = Vehicle.renderVehicles(UsedVehicleManager.getUsedVehicles)
+    println(s"result: $result")
+    result
+  }
 
   override def lowPriority : PartialFunction[Any, Unit] = {
     case VehicleEvent(vehicles) => {
