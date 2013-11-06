@@ -1,16 +1,26 @@
 App.namespace("views.usedVehicles");
-App.views.usedVehicles.updateVehiclesTable = function(vehiclesTable) {
+App.views.usedVehicles.updateVehiclesTable = function(sentTable) {
   "use strict";
 
   var extractIds = App.views.usedVehicles.extractIds;
+  var computeIdDifferences = App.views.usedVehicles.computeIdDifferences;
 
-  var existingIds = extractIds($("#entries"));
-  console.log(existingIds);
+  var existingTable = $("#entries");
+  var existingIds = extractIds(existingTable);
+  var sentIds = extractIds($(sentTable));
 
-  var sentIds = extractIds($(vehiclesTable));
-  console.log(sentIds);
+  var differences = computeIdDifferences(existingIds, sentIds);
+  var toRemove = differences.idsToRemove
+  var toCreate = differences.idsToCreate
 
-  $("#entries").replaceWith($(vehiclesTable));
+  toRemove.forEach(function (id) {
+    $("[data-vehicle-id=" + id + "]").remove()
+  });
+
+  toCreate.forEach(function (id) {
+    var nodeToAppend = $(sentTable).find("[data-vehicle-id=" + id + "]");
+    existingTable.append(nodeToAppend);
+  });
 
   $("#description").val('');
   $("#generated-id").val('');
@@ -19,3 +29,19 @@ App.views.usedVehicles.updateVehiclesTable = function(vehiclesTable) {
 App.views.usedVehicles.extractIds = function(table) {
   return table.find("tr").map(function(index, tr){return $(tr).attr("data-vehicle-id")});
 }
+
+App.views.usedVehicles.computeIdDifferences = function(existingIds, sentIds) {
+  var idsToRemove = [];
+  var idsToCreate = [];
+
+  $.grep(existingIds, function(id) {
+    if ($.inArray(id, sentIds) == -1) idsToRemove.push(id);
+  });
+
+  $.grep(sentIds, function(id) {
+    if ($.inArray(id, existingIds) == -1) idsToCreate.push(id);
+  });
+
+  return {"idsToRemove": idsToRemove, "idsToCreate": idsToCreate}
+}
+
