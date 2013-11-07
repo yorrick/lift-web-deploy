@@ -47,19 +47,22 @@ object UsedVehicleManager {
 
 class VehicleActor extends CometActor {
 
-  def render = "#entries *" #> {html: NodeSeq =>
-    println(s"html: $html")
-    val result = Vehicle.renderVehicles(UsedVehicleManager.getUsedVehicles)
-    println(s"result: $result")
-    result
-  }
+  def render = "#entries *" #> Vehicle.renderVehicles(UsedVehicleManager.getUsedVehicles)
 
   override def lowPriority : PartialFunction[Any, Unit] = {
     case VehicleEvent(vehicles) => {
-      // removes all break line chars since it breaks JS call
-      val html = Vehicle.renderVehicles(vehicles).toString.replaceAll("\n", "")
-      val js = s"window.App.views.usedVehicles.updateVehiclesTable('$html')"
-      partialUpdate(Run(js))
+
+      Templates("index" :: Nil) map {templateContent =>
+          val selector: CssSel = ".entry ^^" #> "ignored"
+          val templateTableRow: NodeSeq = selector(templateContent)
+
+          // removes all break line chars since it breaks JS call
+          val html = Vehicle.renderVehicles(vehicles)(templateTableRow).toString.replaceAll("\n", "")
+          val js = s"window.App.views.usedVehicles.updateVehiclesTable('$html')"
+
+          partialUpdate(Run(js))
+      }
+
     }
   }
 
