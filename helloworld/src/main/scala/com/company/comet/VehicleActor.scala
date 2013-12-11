@@ -5,19 +5,14 @@ import http._
 import net.liftweb.http.js.JsCmds._
 import scala.xml.{Null, Text, Attribute, NodeSeq}
 import com.company.model.{UsedVehicleManager, UsedVehicle}
-import com.company.snippet.VehicleSnippet
 import net.liftweb._
 import actor.LiftActor
 import common._
 import util._
 import Helpers._
 import net.liftweb.http.js.JsCmd
-import com.company.comet.LongTaskEvent
 import net.liftweb.http.js.JsCmds.Replace
-import com.company.comet.Unsubscribe
-import com.company.comet.Subscribe
 import net.liftweb.http.js.JsCmds.Run
-import com.company.comet.VehicleEvent
 
 
 case class LongTaskEvent(val userCometActor: Box[LiftCometActor],
