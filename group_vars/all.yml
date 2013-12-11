@@ -1,2 +1,1 @@
-# do not put more than one app here, since app is deployed to root contextof jetty
 site_names: ['helloworld']

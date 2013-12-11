@@ -45,8 +45,8 @@ host ubuntu-server-vm
 
 
 
-Ansible
-=======
+Ssh connection
+==============
 
 Activate virtualenv:
 source ~/virtualenvs/fabric/bin/activate
@@ -65,11 +65,12 @@ Then do
 ssh-add ~/.ssh/app1_rsa
 ssh ubuntu-server-vm
 
-
-ssh VM_IP
-or
 ansible all -m ping (ssh VM_IP must connect for this to work)
 
+
+
+Ansible
+=======
 
 Apply playbook for config:
 ansible-playbook -v -i hosts site.yml --tags config
@@ -85,6 +86,10 @@ ansible-playbook -v -i hosts site.yml --tags deploy,test
 
 TODO
 ====
+ - use add line in file instead of copying everything in ansible
+ - test thread pool in jetty (with continuations in lift)
+ - see how to connect a broker (JMS by example) to actors
+ - see how to implement caching in lift with memcached (and a kind of decorator)
  - integrate bootstrap in lift app
  - set jetty logs path for each app http://webtide.intalio.com/2011/08/sifting-logs-in-jetty-with-logback/
     - copy jars in /usr/share/jetty8/etc/lib/logging/
