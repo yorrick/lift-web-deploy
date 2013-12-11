@@ -2,7 +2,7 @@ package com.company.comet
 
 import net.liftweb._
 import http._
-import net.liftweb.http.js.JsCmds.{Replace, Run}
+import net.liftweb.http.js.JsCmds._
 import scala.xml.{Null, Text, Attribute, NodeSeq}
 import com.company.model.{UsedVehicleManager, UsedVehicle}
 import com.company.snippet.VehicleSnippet
@@ -11,6 +11,13 @@ import actor.LiftActor
 import common._
 import util._
 import Helpers._
+import net.liftweb.http.js.JsCmd
+import com.company.comet.LongTaskEvent
+import net.liftweb.http.js.JsCmds.Replace
+import com.company.comet.Unsubscribe
+import com.company.comet.Subscribe
+import net.liftweb.http.js.JsCmds.Run
+import com.company.comet.VehicleEvent
 
 
 case class LongTaskEvent(val userCometActor: Box[LiftCometActor],
@@ -66,9 +73,27 @@ case class Unsubscribe(actor : VehicleActor)
 class VehicleActor extends CometActor {
 
   /**
+   * Vehicle rendering function
+   */
+  def renderVehicles(vehicles: List[UsedVehicle]): CssSel =
+    ".entry *" #> vehicles.map(vehicle => {
+      val removeFunction: () => JsCmd = {() =>
+        UsedVehicleManager.removeUsedVehicle(vehicle.id.get)
+        Noop
+      }
+
+      ".description *" #> vehicle.description.get &
+        ".generatedId *" #> vehicle.generatedId.get &
+        ".removeAction *" #> SHtml.ajaxButton(Text("Remove"), removeFunction) &
+        ".removeAction [data-vehicle-id]" #> vehicle.id.get.toString &
+        ".status [id]" #> ("status-" + vehicle.id.get.toString)
+    }
+  )
+
+  /**
    * Used for initial rendering
    */
-  def render = "#entries *" #> VehicleSnippet.renderVehicles(UsedVehicleManager.getUsedVehicles)
+  def render = "#entries *" #> renderVehicles(UsedVehicleManager.getUsedVehicles)
 
   override def lowPriority : PartialFunction[Any, Unit] = {
     case VehicleEvent(vehicles) => {
@@ -79,7 +104,7 @@ class VehicleActor extends CometActor {
           val templateTableRow: NodeSeq = selector(templateContent)
 
           // build CssSel
-          val usedVehicleCssSel = VehicleSnippet.renderVehicles(vehicles)
+          val usedVehicleCssSel = renderVehicles(vehicles)
           // applies CssSel on html fragment
           val html = usedVehicleCssSel(templateTableRow)
           // removes all break line chars since it breaks JS call

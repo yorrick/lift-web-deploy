@@ -20,27 +20,9 @@ object VehicleSnippet extends Loggable {
     UsedVehicleManager.saveUsedVehicle(description.is, generatedId.is)
   }
 
-  /**
-   * Vehicle rendering function
-   */
-  def renderVehicles(vehicles: List[UsedVehicle]): CssSel =
-      ".entry *" #> vehicles.map(vehicle => {
-          val removeFunction: () => JsCmd = {() =>
-            UsedVehicleManager.removeUsedVehicle(vehicle.id.get)
-            Noop
-          }
-
-          ".description *" #> vehicle.description.get &
-          ".generatedId *" #> vehicle.generatedId.get &
-          ".removeAction *" #> SHtml.ajaxButton(Text("Remove"), removeFunction) &
-          ".removeAction [data-vehicle-id]" #> vehicle.id.get.toString &
-          ".status [id]" #> ("status-" + vehicle.id.get.toString)
-        }
-      )
-
   def render = {
     "#description" #> SHtml.text(description.is, description(_), "" + "maxlength" -> "40", "placeholder" -> "Description") &
     "#generated-id" #> SHtml.text(description.is, s => generatedId(tryo(s.toLong) openOr -1), "placeholder" -> "Generated id") &
-    "#submit" #> (SHtml.hidden(saveUsedVehicle) ++ <input type="submit" value="Create a new vehicle"/>) andThen SHtml.makeFormsAjax
+    "#submit" #> (SHtml.hidden(saveUsedVehicle) ++ <input type="submit" value="Create"/>) andThen SHtml.makeFormsAjax
   }
 }

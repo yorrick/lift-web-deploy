@@ -17,7 +17,7 @@
 
         <div lift="comet?type=VehicleActor">
             <h3>Used vehicles</h3>
-            <table id="vehicles">
+            <table class="vehicles">
                 <thead>
                     <tr>
                         <th>Description</th>
@@ -38,17 +38,12 @@
         </div>
 
         <form class="lift:VehicleSnippet">
-            <table>
+            <table class="vehicles">
                 <tr>
-                    <td align="right">Description: </td>
                     <td><input id="description" type="text"></td>
-                </tr>
-                <tr>
-                    <td align="right">Generated id:</td>
                     <td><input id="generated-id" type="text"></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><input id="submit" type="submit"></td>
+                    <td><input id="submit" type="submit"></td>
+                    <td></td>
                 </tr>
             </table>
         </form>

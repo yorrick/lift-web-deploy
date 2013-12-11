@@ -4,27 +4,29 @@
 @removeLinkWidth: 10%;
 @statusWidth: 10%;
 
-table {
+table.vehicles {
     table-layout: fixed;
     width: @tableWidth;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
-table#vehicles th:first-child, table#vehicles td:first-child {
+table.vehicles th:first-child, table.vehicles td:first-child {
     overflow: hidden;
     width: @descriptionWidth;
 }
 
-table#vehicles th:second-child, table#vehicles td:second-child {
+table.vehicles th:second-child, table.vehicles td:second-child {
     overflow: hidden;
     width: @descriptionWidth;
 }
 
-table#vehicles th:third-child, table#vehicles td:third-child {
+table.vehicles th:third-child, table.vehicles td:third-child {
     overflow: hidden;
     width: @descriptionWidth;
 }
 
-table#vehicles th::nth-child(4), table#vehicles td::nth-child(4) {
+table.vehicles th::nth-child(4), table.vehicles td::nth-child(4) {
     overflow: hidden;
     width: @statusWidth;
 }
