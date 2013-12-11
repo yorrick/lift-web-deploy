@@ -52,10 +52,20 @@ Activate virtualenv:
 source ~/virtualenvs/fabric/bin/activate
 
 Test connection to nodes:
-ssh yorrick@VM_IP -i ~/.ssh/app1_rsa
-or
-ssh-agent bash ?
+
+Add those lines in ~/.ssh/config
+
+host ubuntu-server-vm
+    User yorrick
+    Hostname 192.168.56.2
+    IdentityFile ~/.ssh/app1_rsa
+
+Then do 
+
 ssh-add ~/.ssh/app1_rsa
+ssh ubuntu-server-vm
+
+
 ssh VM_IP
 or
 ansible all -m ping (ssh VM_IP must connect for this to work)
@@ -66,7 +76,7 @@ ansible-playbook -v -i hosts site.yml --tags config
 
 
 Build war for an application:
-cd helloworld && mvn clean && mvn package; cd -
+cd helloworld && mvn clean && mvn package && mv target/helloworld_toto-1.0-SNAPSHOT.war ../roles/app/files/; cd -
 
 
 Deploy all applications:
@@ -76,7 +86,6 @@ ansible-playbook -v -i hosts site.yml --tags deploy,test
 TODO
 ====
  - integrate bootstrap in lift app
- - see how async task (long tasks) are handled in lift
  - set jetty logs path for each app http://webtide.intalio.com/2011/08/sifting-logs-in-jetty-with-logback/
     - copy jars in /usr/share/jetty8/etc/lib/logging/
     										/ext/
