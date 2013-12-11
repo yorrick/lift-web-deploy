@@ -2,64 +2,91 @@ package com.company.comet
 
 import net.liftweb._
 import http._
-import SHtml._
-import net.liftweb.common.{Loggable, Box, Full}
-import net.liftweb.util._
-import net.liftweb.util.Helpers._
-import net.liftweb.http.js.JsCmds.{Run, Noop}
-import scala.xml.{Null, Attribute, Text, NodeSeq}
-import scala.actors.Actor
-import com.company.model.UsedVehicle
-import net.liftweb.mapper.By
-import net.liftweb.http.js.JsCmd
-import com.company.snippet.Vehicle
+import net.liftweb.http.js.JsCmds.{Replace, Run}
+import scala.xml.{Null, Text, Attribute, NodeSeq}
+import com.company.model.{UsedVehicleManager, UsedVehicle}
+import com.company.snippet.VehicleSnippet
+import net.liftweb._
+import actor.LiftActor
+import common._
+import util._
+import Helpers._
 
 
-case class VehicleEvent(val vehicles: List[UsedVehicle])
-case class SubscribeVehicle(actor : VehicleActor)
-case class UnsubVehicle(actor : VehicleActor)
+case class LongTaskEvent(val userCometActor: Box[LiftCometActor],
+                         val waitFor: Int,
+                         val id: Long)
 
+/**
+ * Used to send updates of LongTask
+ */
+class SynchronizerCometActor extends CometActor with Loggable {
 
-object UsedVehicleManager {
+  def render = "*" #> ""
 
-  def getUsedVehicles: List[UsedVehicle] = UsedVehicle.findAll match {
-    case Nil => UsedVehicle.Empty :: Nil
-    case _ @ list => list
-  }
+  override def lowPriority : PartialFunction[Any, Unit] = {
+    case (id: Long, msg) =>
+      val statusTdId = "status-" + id
+      val elem = <td>{msg}</td> % Attribute(None, "id", Text(statusTdId), Null)
 
-  def saveUsedVehicle(description: String, generatedId: Long) {
-    val mapper = UsedVehicle.create.description(description).generatedId(generatedId)
-    mapper.save()
-
-    // sends a message to master actor
-    VehicleMaster ! VehicleEvent(UsedVehicleManager.getUsedVehicles)
-  }
-
-  def removeUsedVehicle(id: Long) {
-    UsedVehicle.findAll(By(UsedVehicle.id, id)).foreach(_.delete_!)
-
-    // sends a message to master actor
-    VehicleMaster ! VehicleEvent(UsedVehicleManager.getUsedVehicles)
+      partialUpdate(Replace(statusTdId, elem))
   }
 
 }
 
 
+/**
+ * Used for long running tasks
+ */
+object SynchronizerActor extends LiftActor with Loggable {
+
+  protected def messageHandler = {
+    case msg @ LongTaskEvent(userCometActor, 0, id) =>
+      userCometActor.foreach(_ ! (id, "Done!!!"))
+      // removes the done message after a while
+      Schedule.schedule(() => userCometActor.foreach(_ ! (id, "")), 5 seconds)
+
+    case msg @ LongTaskEvent(userCometActor, waitFor, id) =>
+      userCometActor.foreach(_ ! (id, s"$waitFor second left"))
+      val newWaitFor = waitFor - 1
+      // simulates a long running task
+      Schedule.schedule(() => this ! LongTaskEvent(userCometActor, newWaitFor, id), 1 seconds)
+  }
+}
+
+
+case class VehicleEvent(val vehicles: List[UsedVehicle])
+case class Subscribe(actor : VehicleActor)
+case class Unsubscribe(actor : VehicleActor)
+
+
+/**
+ * Comet actor that just answers to VehicleEvent events and sends html vehicle listing to browser.
+ */
 class VehicleActor extends CometActor {
 
-  def render = "#entries *" #> Vehicle.renderVehicles(UsedVehicleManager.getUsedVehicles)
+  /**
+   * Used for initial rendering
+   */
+  def render = "#entries *" #> VehicleSnippet.renderVehicles(UsedVehicleManager.getUsedVehicles)
 
   override def lowPriority : PartialFunction[Any, Unit] = {
     case VehicleEvent(vehicles) => {
 
+      // generates HTML by extracting a part of the template, this way
       Templates("index" :: Nil) map {templateContent =>
           val selector: CssSel = ".entry ^^" #> "ignored"
           val templateTableRow: NodeSeq = selector(templateContent)
 
+          // build CssSel
+          val usedVehicleCssSel = VehicleSnippet.renderVehicles(vehicles)
+          // applies CssSel on html fragment
+          val html = usedVehicleCssSel(templateTableRow)
           // removes all break line chars since it breaks JS call
-          val html = Vehicle.renderVehicles(vehicles)(templateTableRow).toString.replaceAll("\n", "")
-          val js = s"window.App.views.usedVehicles.updateVehiclesTable('$html')"
+          val noNewLineHtml = html.toString.toString.replaceAll("\n", "")
 
+          // send html fragment to javascript function
+          val js = s"window.App.views.usedVehicles.updateVehiclesTable('$noNewLineHtml')"
           partialUpdate(Run(js))
       }
 
@@ -67,12 +94,12 @@ class VehicleActor extends CometActor {
   }
 
   override def localSetup {
-    VehicleMaster ! SubscribeVehicle(this)
+    VehicleMaster ! Subscribe(this)
     super.localSetup()
   }
 
   override def localShutdown {
-    VehicleMaster ! UnsubVehicle(this)
+    VehicleMaster ! Unsubscribe(this)
     super.localShutdown()
   }
 }
@@ -81,25 +108,16 @@ class VehicleActor extends CometActor {
 /**
  * Stores all comet actors
  */
-object VehicleMaster extends Actor with Loggable {
+object VehicleMaster extends LiftActor with Loggable {
 
   private var vehicleActors : List[VehicleActor] = Nil
 
-  def act = {
-    loop {
-      react {
-        case SubscribeVehicle(va) =>
-          logger.info("SubscribeVehicle")
-          vehicleActors ::= va
-        case UnsubVehicle(va) =>
-          logger.info("UnsubVehicle")
-          vehicleActors = vehicleActors.filter(_ != va)
-        case ve: VehicleEvent =>
-          logger.info(s"VehicleEvent $ve")
-          vehicleActors.foreach(_ ! ve)
-      }
-    }
+  protected def messageHandler = {
+    case Subscribe(va) =>
+      vehicleActors ::= va
+    case Unsubscribe(va) =>
+      vehicleActors = vehicleActors.filter(_ != va)
+    case ve: VehicleEvent =>
+      vehicleActors.foreach(_ ! ve)
   }
-
-  start()
 }

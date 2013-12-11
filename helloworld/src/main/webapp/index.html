@@ -23,6 +23,7 @@
                         <td>Description</td>
                         <td>Generated id</td>
                         <td>Action</td>
+                        <td>Status</td>
                     </tr>
                 </thead>
                 <tbody id="entries">
@@ -30,12 +31,13 @@
                         <td class="description">Description...</td>
                         <td class="generatedId">Id</td>
                         <td class="removeAction" data-vehicle-id="some-id"><button onclick="">Remove</button></td>
+                        <td class="status" id="status-XXX"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <form class="lift:Vehicle">
+        <form class="lift:VehicleSnippet">
             <table>
                 <tr>
                     <td align="right">Description: </td>
@@ -50,6 +52,9 @@
                 </tr>
             </table>
         </form>
+
+        <div lift="comet?type=SynchronizerCometActor">
+        </div>
 
         <!--<form class="lift:Login">-->
             <!--<table>-->

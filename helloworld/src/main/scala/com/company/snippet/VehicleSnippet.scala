@@ -1,17 +1,17 @@
 package com.company.snippet
 
-import net.liftweb.http.{SHtml, RequestVar}
-import com.company.comet.UsedVehicleManager
-import com.company.model.UsedVehicle
+import net.liftweb.http.{S, SHtml, RequestVar}
+import com.company.model.{UsedVehicleManager, UsedVehicle}
+import com.company.comet.SynchronizerCometActor
 import net.liftweb.util.Helpers._
-import net.liftweb.common.Loggable
+import net.liftweb.common.{Empty, Loggable}
 import scala.xml.{NodeSeq, Text}
 import net.liftweb.http.js.JsCmd
 import net.liftweb.http.js.JsCmds._
 import net.liftweb.util.CssSel
 
 
-object Vehicle extends Loggable {
+object VehicleSnippet extends Loggable {
 
   private object description extends RequestVar("")
   private object generatedId extends RequestVar[Long](0)
@@ -20,6 +20,9 @@ object Vehicle extends Loggable {
     UsedVehicleManager.saveUsedVehicle(description.is, generatedId.is)
   }
 
+  /**
+   * Vehicle rendering function
+   */
   def renderVehicles(vehicles: List[UsedVehicle]): CssSel =
       ".entry *" #> vehicles.map(vehicle => {
           val removeFunction: () => JsCmd = {() =>
@@ -30,7 +33,8 @@ object Vehicle extends Loggable {
           ".description *" #> vehicle.description.get &
           ".generatedId *" #> vehicle.generatedId.get &
           ".removeAction *" #> SHtml.ajaxButton(Text("Remove"), removeFunction) &
-          ".removeAction [data-vehicle-id]" #> vehicle.id.get.toString
+          ".removeAction [data-vehicle-id]" #> vehicle.id.get.toString &
+          ".status [id]" #> ("status-" + vehicle.id.get.toString)
         }
       )
 
